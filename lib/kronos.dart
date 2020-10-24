@@ -61,6 +61,29 @@ class NodeClient extends TemporalXClient {
       ..requestType = DAGREQTYPE.DAG_PUT);
     return res;
   }
+
+  Future<Map<String, bool>> conStatus() async {
+    channel = ClientChannel('xapi.temporal.cloud',
+        port: 9090,
+        options:
+            const ChannelOptions(credentials: ChannelCredentials.insecure()));
+    stub = NodeAPIClient(channel);
+    var res = await stub
+        .connMgmt(ConnMgmtRequest()..requestType = CONNMGMTREQTYPE.CM_STATUS);
+    return res.connected;
+  }
+
+  Future<ConnMgmtResponse> connectLibp2p(List<String> addr) async {
+    channel = ClientChannel('xapi.temporal.cloud',
+        port: 9090,
+        options:
+            const ChannelOptions(credentials: ChannelCredentials.insecure()));
+    stub = NodeAPIClient(channel);
+    var res = await stub.connMgmt(ConnMgmtRequest()
+      ..requestType = CONNMGMTREQTYPE.CM_CONNECT
+      ..multiAddrs.addAll(addr));
+    return res;
+  }
 }
 
 class PubSubClient extends TemporalXClient {

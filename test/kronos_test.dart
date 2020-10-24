@@ -10,6 +10,20 @@ void main() {
     var result = await cli.getStatus();
     print(result);
   });
+
+  test('Connection Status', () async {
+    final cli = NodeClient();
+    var result = await cli.conStatus();
+    result.forEach((key, value) {
+      print("$key = $value");
+    });
+    List<String> addr = [];
+    addr.add(
+        '/ip4/208.123.36.178/udp/4001/quic/p2p/QmShkjkBoYXLezS4wZMvvE2zGVeSAC1WrALMgotg9aUtsT');
+    await cli.connectLibp2p(addr).then((value) {
+      print(value.peerIDs);
+    });
+  });
   test('Get Peers', () async {
     final cli = NodeClient();
     var result = await cli.getPeers();
